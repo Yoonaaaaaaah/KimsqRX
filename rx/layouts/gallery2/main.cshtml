@@ -36,8 +36,7 @@
     System.Collections.ArrayList ctarr = new System.Collections.ArrayList();
     System.Collections.ArrayList CXA = new System.Collections.ArrayList();
 
-    dynamic LAYOUT_ARR = _DB.Get_code_layout(d_layout["dir"]);
-    
+    var LAYOUT_ARR = _DB.Get_code_layout(d_layout["dir"]);
     
     Session["arr_uid"] = null;
     Session["MenuOpen"] = null;
@@ -63,7 +62,7 @@
     //////////////////////////////////////////////////////////
     ///// Top File Rendering
     //////////////////////////////////////////////////////////
-    @RenderPage("../../" + g["path_layout"] + d_layout["dir"] + "/_cross/top.cshtml", g, my, r, s, _HP, _CA, d_layout, LAYOUT_ARR, _HS, _HM, system)
+    @RenderPage("../../" + g["path_layout"] + d_layout["dir"] + "/_cross/top.cshtml", g, my, r, s, _HP, _CA,  _HS, d_layout, LAYOUT_ARR, _HM, system)
 }
 
 <div class="snb">
@@ -132,7 +131,7 @@
 {
     if (LAYOUT_ARR["begin"] == "0" || LAYOUT_ARR["begin"] == "")
     {
-        @RenderPage("../../" + g["path_layout"] + d_layout["dir"] + "/_cross/_begin.cshtml", g, my, r, s, _HP, _CA, d_layout, LAYOUT_ARR)            
+        @RenderPage("../../" + g["path_layout"] + d_layout["dir"] + "/_cross/_begin.cshtml", g, my, r, s, _HP, _CA, _HS, d_layout, LAYOUT_ARR)          
     }
     else
     {

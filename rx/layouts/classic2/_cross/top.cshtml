@@ -1,23 +1,21 @@
 ﻿@{
     /*****************************************************************
     //
-    //// Programmed by SungHO Kim (Migration: TaiHyung Kim, YoonAh Sim)
+    //// Programmed by SungHO Kim (Migration: YoonA Shim, TaiHyung Kim)
     // KimsQ-Rx (for Microsoft ASP.NET WebPages)
     // Copyrights © Redblock Allrights Reserved. Powered by kimsQ-Rx
     // Since 2011.
     //
     *****************************************************************/
-    
-
     var g = PageData[0];
     var my = PageData[1];
     var r = PageData[2];
     var s = PageData[3];
     var _HP = PageData[4];
     var _CA = PageData[5];
-    var d_layout = PageData[6];
-    dynamic LAYOUT_ARR = PageData[7];
-    var _HS = PageData[8];
+    var _HS = PageData[6];
+    var d_layout = PageData[7];
+    var LAYOUT_ARR = PageData[8];    
         
     string _themeConfig = Request["_themeConfig"];
     string _keyword = Request["_keyword"];
@@ -53,7 +51,7 @@
                         <a href="@_System.RW("mod=mypage", g["r"], _HS)"@d_layout["_memberlink_color"]>나의계정</a> @("|") 
                         <a href="@g["s"]/?r=@r&a=logout"@d_layout["_memberlink_color"]>로그아웃</a>
     
-                        if(LAYOUT_ARR["sns_use"] != "")
+                        if(LAYOUT_ARR["sns_use"] == "1")
                         {
                             <a href="#." onclick="getLayerBox('@g["s"]/?r=@r&m=social&page=account&iframe=Y','소셜계정',600,650,event,false,'l');"@d_layout["_memberlink_color"]><img src="@g["img_layout"]/sns.png" alt="" title="소셜계정" /> SNS</a>
                         }
@@ -63,7 +61,7 @@
                         <a href="@_System.RW("mod=join", g["r"], _HS)"@d_layout["_memberlink_color"]>회원가입</a> @("|") 
                         <a href="@_System.RW("mod=login", g["r"], _HS)"@d_layout["_memberlink_color"]>로그인</a>
         
-                        if(LAYOUT_ARR["sns_use"] != "")
+                        if(LAYOUT_ARR["sns_use"] == "1")
                         {
                         <a href="#." onclick="getLayerBox('@g["s"]/?r=@r&m=social&page=login&iframe=Y','소셜 로그인',350,300,event,false,'l');"@d_layout["_memberlink_color"]><img src="@g["img_layout"]/sns.png" alt="" title="소셜 로그인" /> SNS</a>
                         }		

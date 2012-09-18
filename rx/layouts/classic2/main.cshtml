@@ -29,13 +29,13 @@
     var _HP = PageData[17];
     var date = PageData[18];
     var referer = PageData[19];
-    
-    dynamic LAYOUT_ARR = _DB.Get_code_layout(d_layout["dir"]);
+
+    var LAYOUT_ARR = _DB.Get_code_layout(d_layout["dir"]);
 
     //////////////////////////////////////////////////////////
     ///// Top File Rendering
     //////////////////////////////////////////////////////////
-    @RenderPage("../../" + g["path_layout"] + d_layout["dir"] + "/_cross/top.cshtml", g, my, r, s, _HP, _CA, d_layout, LAYOUT_ARR, _HS)
+    @RenderPage("../../" + g["path_layout"] + d_layout["dir"] + "/_cross/top.cshtml", g, my, r, s, _HP, _CA, _HS, d_layout, LAYOUT_ARR)    
 }
 
 <div id="content">
@@ -44,7 +44,7 @@
     @RenderPage("../../" + g["path_layout"] + d_layout["dir"] + "/_cross/_main.cshtml", g, my, r, s, _HP, _CA, _HS, d_layout, LAYOUT_ARR)    
     
     if(LAYOUT_ARR["begin"] == "0" || LAYOUT_ARR["begin"] == "") {
-        @RenderPage("../../" + g["path_layout"] + d_layout["dir"] + "/_cross/_begin.cshtml", g, my, r, s, _HP, _CA, d_layout, LAYOUT_ARR)            
+        @RenderPage("../../" + g["path_layout"] + d_layout["dir"] + "/_cross/_begin.cshtml", g, my, r, s, _HP, _CA, _HS, d_layout, LAYOUT_ARR)            
     }
 }
 
