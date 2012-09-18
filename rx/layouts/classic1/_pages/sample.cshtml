@@ -1,4 +1,15 @@
-﻿
+﻿@{
+    /*****************************************************************
+    //
+    // Programmed by SungHO Kim (Migration: YoonA Shim, TaiHyung Kim)
+    // KimsQ-Rx (for Microsoft ASP.NET WebPages)
+    // Copyrights © Redblock Allrights Reserved. Powered by kimsQ-Rx
+    // Since 2011.
+    //
+    *****************************************************************/        
+    var g = PageData[0];
+    var r = PageData[2];    
+}
 <div id="samplepage">
 
 	<h1>레이아웃 자체 페이지 추가안내</h1>
@@ -19,7 +30,7 @@
 	<li>CSS가 필요할 경우 CSS파일을 만듭니다.<i>페이지 파일명과 동일하게 만듭니다.<br />(보기) company.css</i></li>
 	<li>php파일과 css파일을 원하는 형식으로 구성(편집)합니다.</li>
 	<li>편집한 파일을 이 레이아웃의 폴더내 _pages 안에 업로드합니다.</li>
-	<li>페이지를 호출합니다.<br /><i>페이지 호출방법 : /rx/?r=사이트코드&amp;_themePage=파일명(확장자제외)<br />(변수) &lt;?php echo $g['s']?&gt;/?r=&lt;?php echo $r?&gt;&amp;_themePage=파일명(확장자제외)<br />하나의 사이트만 생성해서 운영할 경우 사이트코드는 생략가능합니다.</i></li>
+	<li>페이지를 호출합니다.<br /><i>페이지 호출방법 : /rx/?r=사이트코드&amp;_themePage=파일명(확장자제외)<br />(변수) &lt;@g["s"]?&gt;/?r=&lt;@r&gt;&amp;_themePage=파일명(확장자제외)<br />하나의 사이트만 생성해서 운영할 경우 사이트코드는 생략가능합니다.</i></li>
 	<li>이 샘플페이지를 참고하세요.<i>/레이아웃폴더/_pages/sample.php 와 sample.css</i></li>
 	</ol>
 	</div>
