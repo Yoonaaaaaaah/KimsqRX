@@ -19,164 +19,172 @@
         @optID(table_name)
     }
 
-    db.Execute(queryString);
+    try
+    {
+        db.Execute(queryString);
+    }    
+    catch (System.Data.SqlServerCe.SqlCeException ex)
+    {
+        @_System.getLink("", "", "System.Data.SqlServerCe.SqlCeException: " + ex.ToString(), "")
+    }
+
     db.Close();
 }
 
 @helper getDbInsert(object table, string key, string val)
-{
-    var INSERT_SQL = "";
-
-    if (key != null && key != "" && val != null && val != "")
     {
-        INSERT_SQL = "INSERT INTO  " + table.ToString() + " (" + key + ") VALUES (" + val + ")";
-    }
+        var INSERT_SQL = "";
+
+        if (key != null && key != "" && val != null && val != "")
+        {
+            INSERT_SQL = "INSERT INTO  " + table.ToString() + " (" + key + ") VALUES (" + val + ")";
+        }
     
     @optID(table)
 
-    Execute(INSERT_SQL);
+        Execute(INSERT_SQL);
 }
 
 @helper getDbUpdate(object table, string set, string where)
-{
-    var UPDATE_SQL = "";
-
-    if (set != null && set != "")
     {
-        UPDATE_SQL = "UPDATE " + table.ToString() + " SET " + set;
-    }
+        var UPDATE_SQL = "";
 
-    if (where != null && where != "")
-    {
-        UPDATE_SQL += " WHERE " + where;
-    }
+        if (set != null && set != "")
+        {
+            UPDATE_SQL = "UPDATE " + table.ToString() + " SET " + set;
+        }
 
-    Execute(UPDATE_SQL);    
+        if (where != null && where != "")
+        {
+            UPDATE_SQL += " WHERE " + where;
+        }
+
+        Execute(UPDATE_SQL);    
 }
 
 @helper getDbDelete(object table, string where)
-{
-    var DELETE_SQL = "DELETE FROM " + table.ToString();
-
-    if (where != null && where != "")
     {
-        DELETE_SQL += " WHERE " + where;
-    }
-    
-    Execute(DELETE_SQL);       
+        var DELETE_SQL = "DELETE FROM " + table.ToString();
+
+        if (where != null && where != "")
+        {
+            DELETE_SQL += " WHERE " + where;
+        }
+
+        Execute(DELETE_SQL);       
 }
 
 @helper GetDbData_S(object table, string whereis, string data)
-{            
-    // Database Output (특정필드 return)
-    var whereis_set = "";
+    {            
+        // Database Output (특정필드 return)
+        var whereis_set = "";
 
-    if (whereis != "" && whereis != null)
-    {
-        whereis_set = " WHERE " + whereis;
-    }
+        if (whereis != "" && whereis != null)
+        {
+            whereis_set = " WHERE " + whereis;
+        }
 
-    var result = QuerySingle("SELECT " + data + " FROM " + table.ToString() + whereis_set);
+        var result = QuerySingle("SELECT " + data + " FROM " + table.ToString() + whereis_set);
 
-    if (result == null)
-    {
-        return;
-    }
-    else
-    {
+        if (result == null)
+        {
+            return;
+        }
+        else
+        {
         @result[0];
-    }
+        }
 }
 
 @helper optID(object table)
-{   
-    if (table.ToString() == "")
-    {
-        return;
-    }
-    
-    string id = "uid";
-    
-    // 테이블에 데이터가 없으면 id값 초기화
-
-    if (GetDbData_Count(table.ToString(), "") == 0)
-    {
-        var ALTER_TABLE_SQL = "ALTER TABLE " + table + " ALTER COLUMN " + id + " IDENTITY (1,1)";        
-        Execute(ALTER_TABLE_SQL);
-    }
-    else
-    {
-        var isPrikey = QuerySingle("SELECT AUTOINC_INCREMENT FROM INFORMATION_SCHEMA.COLUMNS where TABLE_NAME like '" + table + "'");
-        
-        if (isPrikey[0] != null && isPrikey[0].ToString().Contains(table.ToString()))
+    {   
+        if (table.ToString() == "")
         {
-            string startUid = GetDbData_S(table.ToString(), "", "max(" + id + ")").ToString();
+            return;
+        }
 
-            var ALTER_TABLE_SQL = "ALTER TABLE " + table + " ALTER COLUMN " + id + " IDENTITY (" + (Convert.ToInt32(startUid) + 1).ToString() + ",1)";
+        string id = "uid";
+
+        // 테이블에 데이터가 없으면 id값 초기화
+
+        if (GetDbData_Count(table.ToString(), "") == 0)
+        {
+            var ALTER_TABLE_SQL = "ALTER TABLE " + table + " ALTER COLUMN " + id + " IDENTITY (1,1)";
             Execute(ALTER_TABLE_SQL);
         }
-    }
+        else
+        {
+            var isPrikey = QuerySingle("SELECT AUTOINC_INCREMENT FROM INFORMATION_SCHEMA.COLUMNS where TABLE_NAME like '" + table + "'");
+
+            if (isPrikey[0] != null && isPrikey[0].ToString().Contains(table.ToString()))
+            {
+                string startUid = GetDbData_S(table.ToString(), "", "max(" + id + ")").ToString();
+
+                var ALTER_TABLE_SQL = "ALTER TABLE " + table + " ALTER COLUMN " + id + " IDENTITY (" + (Convert.ToInt32(startUid) + 1).ToString() + ",1)";
+                Execute(ALTER_TABLE_SQL);
+            }
+        }
 }
 
 @helper createTable(string module)
-{
-    string cpath = Request.PhysicalApplicationPath + "\\modules\\" + module + "\\_setting\\";
-
-    foreach (string files in Directory.GetFiles(cpath))
     {
-        var result = "";
-        var tableName = "";
-        var primaryKey = "";
-        var insertdata = "";
+        string cpath = Request.PhysicalApplicationPath + "\\modules\\" + module + "\\_setting\\";
 
-        string file_name = files.Substring(cpath.Length, files.Length - cpath.Length);
-
-        foreach (string data in File.ReadAllLines(files))
+        foreach (string files in Directory.GetFiles(cpath))
         {
-            if (data.Trim() == "")
+            var result = "";
+            var tableName = "";
+            var primaryKey = "";
+            var insertdata = "";
+
+            string file_name = files.Substring(cpath.Length, files.Length - cpath.Length);
+
+            foreach (string data in File.ReadAllLines(files))
             {
-                continue;
+                if (data.Trim() == "")
+                {
+                    continue;
+                }
+
+                if (data.Trim().StartsWith("table_name"))
+                {
+                    tableName = data.Split(':')[1].Trim();
+                }
+                else if (data.Trim().StartsWith("primary_key"))
+                {
+                    primaryKey = data.Split(':')[1].Trim();
+                }
+                else
+                {
+                    insertdata += data.Replace("[]", " ").Replace("[", " ").Replace("]", " ");
+                    insertdata += ",";
+                }
             }
 
-            if (data.Trim().StartsWith("table_name"))
+            if (insertdata != "")
             {
-                tableName = data.Split(':')[1].Trim();
-            }
-            else if (data.Trim().StartsWith("primary_key"))
-            {
-                primaryKey = data.Split(':')[1].Trim();
-            }
-            else
-            {
-                insertdata += data.Replace("[]", " ").Replace("[", " ").Replace("]", " ");
-                insertdata += ",";
-            }
-        }
+                result = "CREATE TABLE " + tableName + " (";
 
-        if (insertdata != "")
-        {
-            result = "CREATE TABLE " + tableName + " (";
+                if (primaryKey != "")
+                {
+                    result += insertdata + "PRIMARY KEY (" + primaryKey + "));";
+                }
+                else
+                {
+                    result += insertdata.Substring(0, insertdata.Length - 1) + ");";
+                }
 
-            if (primaryKey != "")
-            {
-                result += insertdata + "PRIMARY KEY (" + primaryKey + "));";
-            }
-            else
-            {
-                result += insertdata.Substring(0, insertdata.Length - 1) + ");";
+                Execute(result);
             }
 
-            Execute(result);
-        }
-
-        //File.WriteAllText(Request.PhysicalApplicationPath + "sql_query\\" + file_name + ".txt", result, System.Text.Encoding.UTF8);
-    }  
+            //File.WriteAllText(Request.PhysicalApplicationPath + "sql_query\\" + file_name + ".txt", result, System.Text.Encoding.UTF8);
+        }  
 }
 
 @functions {
     public static dynamic Query(string queryString)
     {
-        var db = Database.Open(AppState["DB_Name"].ToString());                
+        var db = Database.Open(AppState["DB_Name"].ToString());
         var result = db.Query(queryString);
         db.Close();
 

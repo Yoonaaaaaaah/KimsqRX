@@ -27,7 +27,7 @@
     my = _DB.getFromDB(my, null, AppState["table_s_mbrid"]);
     my = _DB.getFromDB(my, null, AppState["table_s_mbrdata"]);
 
-    dynamic date = _System.GetVDate(0);
+    dynamic date = _System.GetVDate(0);    
 
     var r = Request["r"];
     var s = Request["s"].AsInt();
@@ -47,11 +47,9 @@
     var _page = Request["_page"];
     var prelayout = Request["prelayout"];
     var p = Request["p"].AsInt();
-    
-    
+
     var keyword = "";
     var _keyword = "";
-    
     
     var http_prn = "http://";
     var rStr = ".";
@@ -137,6 +135,7 @@
     d_layout.Add("pwd", "");
     d_layout.Add("var", "");
     d_layout.Add("menunum", "8");
+    
 
     //////////////////////////////////////////////////////////////////
     /// Global System Setting

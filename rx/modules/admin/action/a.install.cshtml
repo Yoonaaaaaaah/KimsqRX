@@ -51,6 +51,10 @@
     string INSERT_SQL = "";
     
        
+    <!--  DIRECTORY SETTING -->  
+    @_SetDir.initDir()
+    
+    
     <!--  SITE SETTING -->    
     string siteid = "home";
     string QKEY = "gid,id,name,title,titlefix,icon,layout,startpage,m_layout,m_startpage,lang,opend,dtd,nametype,timecal,rewrite,buffer,usescode,headercode,footercode";
@@ -72,7 +76,7 @@
     pagesarray.Add("private", new string[3] { "개인정보 취급방침", "3", "" });
     pagesarray.Add("postrule", new string[3] { "게시물 게재원칙", "3", "" });
 
-    string maincontent = "<iframe src=\"http://docs.kimsq.com/guide/rx/defaultPage_kr.php" + _System.isEqual(iswpiinstall, true, "?wpi=Y", "") + "\" width=\"100%\" height=\"650\" frameborder=\"0\" scrolling=\"no\" allowTransparency=\"true\"></iframe>";
+    string maincontent = "<iframe src=\"http://docs.kimsq.com/guide/rb/defaultPage_kr.php" + _System.isEqual(iswpiinstall, true, "?wpi=Y", "") + "\" width=\"100%\" height=\"650\" frameborder=\"0\" scrolling=\"no\" allowTransparency=\"true\"></iframe>";
 
     foreach (string _key in pagesarray.Keys)
     {
@@ -82,23 +86,22 @@
         VAL = "'" + _val[1] + "','" + _System.isEqual(_key, "main", "1", "0") + "','" + _System.isEqual(_key, "main", "1", "0") + "','" + _key + "','" + "기본페이지" + "','" + _val[0] + "','','0','','" + _val[2]
             + "','0','" + date["insert"] + "',''";
         INSERT_SQL = "INSERT INTO " + AppState["table_s_page"] + "(" + KEY + ") VALUES (" + VAL + ")";
-        @_DB.Execute(INSERT_SQL);
+        @_DB.Execute(INSERT_SQL)
 
-                                mfile = g["path_root_ps"] + g["path_page"] + _key + ".cshtml";
-                                File.WriteAllText(mfile, _System.isEqual(_key, "main", maincontent, _val[0]), System.Text.Encoding.UTF8);
+        mfile = g["path_root_ps"] + g["path_page"] + _key + ".cshtml";
+        File.WriteAllText(mfile, _System.isEqual(_key, "main", maincontent, _val[0]), System.Text.Encoding.UTF8);
 
-                                mfile = g["path_root_ps"] + g["path_page"] + _key + ".widget.cshtml";
-                                File.WriteAllText(mfile, "", System.Text.Encoding.UTF8);
+        mfile = g["path_root_ps"] + g["path_page"] + _key + ".widget.cshtml";
+        File.WriteAllText(mfile, "", System.Text.Encoding.UTF8);
     }    
     
-    <!--  MOBILE PAGE -->    
-    
+    <!--  MOBILE PAGE -->
     KEY = "pagetype,ismain,mobile,id,category,name,perm_g,perm_l,layout,joint,hit,sosokmenu,d_regis,d_update";
     VAL = "'3','0','1','main_mobile','모바일페이지','메인화면','','0','','','0','','" + date["insert"] + "',''";
     INSERT_SQL = "INSERT INTO " + AppState["table_s_page"] + "(" + KEY + ") VALUES (" + VAL + ")";
-    @_DB.Execute(INSERT_SQL);
+    @_DB.Execute(INSERT_SQL)
 
-                            string[] mobilemaincontent = 
+    string[] mobilemaincontent = 
     {
         "@{",
         "var g = PageData[0];",
@@ -117,11 +120,11 @@
         "</p>"
     };
 
-                            mfile = g["path_root_ps"] + g["path_page"] + "main_mobile.cshtml";
-                            File.WriteAllLines(mfile, mobilemaincontent, System.Text.Encoding.UTF8);
+    mfile = g["path_root_ps"] + g["path_page"] + "main_mobile.cshtml";
+    File.WriteAllLines(mfile, mobilemaincontent, System.Text.Encoding.UTF8);
 
-                            mfile = g["path_root_ps"] + g["path_page"] + "main_mobile.widget.cshtml";
-                            File.WriteAllText(mfile, "", System.Text.Encoding.UTF8);           
+    mfile = g["path_root_ps"] + g["path_page"] + "main_mobile.widget.cshtml";
+    File.WriteAllText(mfile, "", System.Text.Encoding.UTF8);           
 
     
     <!--  StART PAGE UPDATE -->
@@ -136,53 +139,59 @@
     KEY = "site,id,pw";
     VAL = "'1','" + id + "','" + FormsAuthentication.HashPasswordForStoringInConfigFile(pw1, "SHA1") + "'";
     INSERT_SQL = "INSERT INTO " + AppState["table_s_mbrid"] + "(" + KEY + ") VALUES (" + VAL + ")";
-    @_DB.Execute(INSERT_SQL);
+    @_DB.Execute(INSERT_SQL)
 
-                            string mbruid = _DB.GetDbData_S(AppState["table_s_mbrid"].ToString(), "", "uid").ToString();
-                            string startsite = _DB.GetDbData_S(AppState["table_s_site"].ToString(), "", "uid").ToString();
+    string mbruid = _DB.GetDbData_S(AppState["table_s_mbrid"].ToString(), "", "uid").ToString();
+    string startsite = _DB.GetDbData_S(AppState["table_s_site"].ToString(), "", "uid").ToString();
 
-                            KEY = "memberuid,site,auth,sosok,level,comp,admin,adm_view,email,name,nic,grade,photo,home,sex,birth1,birth2,birthtype,tel1,tel2,zip,addr0,addr1,addr2,job,marr1,marr2,sms,mailing,smail,point,usepoint,money,cash,num_login,pw_q,pw_a,now_log,last_log,last_pw,is_paper,d_regis,tmpcode,sns,addfield,adm_name";
-                            VAL = "'" + mbruid + "','" + startsite + "','1','1','1','0','1','','" + email + "','" + name + "','관리자','','','','0','0','0000','0','','','','','','','','0','0','1','1','0','0','0','0','0','1','킴스큐 설치시에 입력한 회원비밀번호는?','" + pw1 + "','1','" + date["insert"] + "','" + date["insert"] + "','0','" + date["insert"] + "','','','','최고관리자'";
-                            INSERT_SQL = "INSERT INTO " + AppState["table_s_mbrdata"] + "(" + KEY + ") VALUES (" + VAL + ")";
-    @_DB.Execute(INSERT_SQL);
+    KEY = "memberuid,site,auth,sosok,level,comp,admin,adm_view,email,name,nic,grade,photo,home,sex,birth1,birth2,birthtype,tel1,tel2,zip,addr0,addr1,addr2,job,marr1,marr2,sms,mailing,smail,point,usepoint,money,cash,num_login,pw_q,pw_a,now_log,last_log,last_pw,is_paper,d_regis,tmpcode,sns,addfield,adm_name";
+    VAL = "'" + mbruid + "','" + startsite + "','1','1','1','0','1','','" + email + "','" + name + "','관리자','','','','0','0','0000','0','','','','','','','','0','0','1','1','0','0','0','0','0','1','킴스큐 설치시에 입력한 회원비밀번호는?','" + pw1 + "','1','" + date["insert"] + "','" + date["insert"] + "','0','" + date["insert"] + "','','','','최고관리자'";
+    INSERT_SQL = "INSERT INTO " + AppState["table_s_mbrdata"] + "(" + KEY + ") VALUES (" + VAL + ")";
+    @_DB.Execute(INSERT_SQL)
 
 
-                            string[] sosokset = new string[8] { "A그룹", "B그룹", "C그룹", "D그룹", "E그룹", "F그룹", "G그룹", "H그룹" };
+    string[] sosokset = new string[8] { "A그룹", "B그룹", "C그룹", "D그룹", "E그룹", "F그룹", "G그룹", "H그룹" };
 
-                            for (int i = 0; i < sosokset.Length; i++)
-                            {
-                                INSERT_SQL = "INSERT INTO " + AppState["table_s_mbrgroup"] + " (uid, gid,name,num) VALUES ('" + (i + 1) + "','" + i + "','" + sosokset[i] + "','" + _System.isEqual(i, 0, "1", "0") + "')";
-        @_DB.Execute(INSERT_SQL);
-                            }
+    for (int i = 0; i < sosokset.Length; i++)
+    {
+        INSERT_SQL = "INSERT INTO " + AppState["table_s_mbrgroup"] + " (gid,name,num) VALUES ('" + i + "','" + sosokset[i] + "','" + (i == 0 ? "1" : "0") + "')";
+        @_DB.Execute(INSERT_SQL)
+    }
 
-                            for (int i = 1; i < 101; i++)
-                            {
-                                INSERT_SQL = "INSERT INTO " + AppState["table_s_mbrlevel"] + " (uid, gid,name,num,login,post,comment) VALUES ('" + i + "','" + _System.isEqual(i, 20, "1", "0") + "','레벨" + i + "','" + _System.isEqual(i, 0, "1", "0") + "','0','0','0')";
-        @_DB.Execute(INSERT_SQL);
-                            }
+    for (int i = 1; i < 101; i++)
+    {
+        INSERT_SQL = "INSERT INTO " + AppState["table_s_mbrlevel"] + " (gid,name,num,login,post,comment) VALUES ('" + (i == 20 ? "1" : "0") + "','레벨" + i + "','" + _System.isEqual(i, 0, "1", "0") + "','0','0','0')";
+        @_DB.Execute(INSERT_SQL)
+    }
 
-                            //setcookie('svshop', $id.'|'.$pw1, time()+60*60*24*30, '/');    
 
-                            Session["mbr_uid"] = mbruid;
-                            Session["mbr_pw"] = FormsAuthentication.HashPasswordForStoringInConfigFile(pw1, "SHA1");
+    HttpCookie Cookie_svshop = new HttpCookie("id_save_Cookie");
 
-                            if (!Directory.Exists(g["path_root_ps"] + g["path_module"] + "admin\\var\\users"))
-                            {
-                                Directory.CreateDirectory(g["path_root_ps"] + g["path_module"] + "admin\\var\\users");
-                            }
+    Cookie_svshop.Value = id + "|" + pw1;
+    Cookie_svshop.Expires = date["totime"].AddDays(30);
+    
+    Response.Cookies.Add(Cookie_svshop);
 
-                            File.WriteAllText(g["path_root_ps"] + g["path_module"] + "admin\\var\\users\\" + id + ".widget.cshtml", "", System.Text.Encoding.UTF8);
+    Session["mbr_uid"] = mbruid;
+    Session["mbr_pw"] = FormsAuthentication.HashPasswordForStoringInConfigFile(pw1, "SHA1");
 
-                            if (iswpiinstall)
-                            {
-                                //File.Delete(wpivfile);
+    if (!Directory.Exists(g["path_root_ps"] + g["path_module"] + "admin\\var\\users"))
+    {
+        Directory.CreateDirectory(g["path_root_ps"] + g["path_module"] + "admin\\var\\users");
+    }
+
+    File.WriteAllText(g["path_root_ps"] + g["path_module"] + "admin\\var\\users\\" + id + ".widget.cshtml", "", System.Text.Encoding.UTF8);
+
+    if (iswpiinstall)
+    {
+        //File.Delete(wpivfile);
         @_System.getLink("./", "", "설치가 완료되었습니다. 홈페이지로 이동합니다.", "")
-                                return;
-                            }
-                            else
-                            {
+        return;
+    }
+    else
+    {
         @_System.getLink("./", "parent.", "설치가 완료되었습니다. 홈페이지로 이동합니다.", "")
-                                return;
-                            }
+        return;
+    }
     
 }

@@ -83,88 +83,75 @@
     return;
 }
 
-@*
-@helper insertCodeLayout()
-    {
-        // rx_code_d_layout
-        var db = Database.Open(@AppState["DB_Name"].ToString());
-
-        // table 비우기
-        string DELETE_TABLE_SQL = "DELETE FROM " + AppState["table_code_d_layout"];
-    @_DB.Execute(DELETE_TABLE_SQL);
-
-                                  // id값 초기화
-                                  string ALTER_TABLE_SQL = "ALTER TABLE " + AppState["table_code_d_layout"] + " ALTER COLUMN uid IDENTITY (1,1)";
-    @_DB.Execute(ALTER_TABLE_SQL);
-
-                                 // insert data
-                                 string cpath = Request.PhysicalApplicationPath + "\\_var\\d_layout\\";
-
-                                 foreach (string files in Directory.GetFiles(cpath))
-                                 {
-                                     string file_name = files.Substring(cpath.Length, files.Length - cpath.Length);
-
-                                     Array dataRows = File.ReadAllLines(files);
-
-                                     foreach (string data in dataRows)
-                                     {
-                                         if (data.Trim() == "")
-                                         {
-                                             continue;
-                                         }
-
-                                         string[] item = _System.getArrayString(data);
-
-                                         string INSERT_CODE_SQL = "INSERT INTO " + AppState["table_code_d_layout"] + " (layout,id,id_value) VALUES ('" + item[0] + "','" + item[1] + "','" + item[2] + "');";                       
-            @_DB.Execute(INSERT_CODE_SQL);
-                                     }
-                                 }
-}*@
 
 @helper insertCodeModule()
 {
-    // insert data in rx_code_d_module
-    string fileName = Request.PhysicalApplicationPath + "\\_var\\insert_module.txt";
+    // insert data in rx_code_d_module    
+    string[] InsertModuleSqls =
+    {
+        "INSERT INTO rx_s_module (gid,system,hidden,mobile,name,id,tblnum,d_regis) VALUES (0,'1','0','1','홈페이지','home','0',getdate());",
+        "INSERT INTO rx_s_module (gid,system,hidden,mobile,name,id,tblnum,d_regis) VALUES (1,'1','0','1','레이아웃','layout','0',getdate());",
+        "INSERT INTO rx_s_module (gid,system,hidden,mobile,name,id,tblnum,d_regis) VALUES (2,'1','0','1','모듈','module','0',getdate());",
+        "INSERT INTO rx_s_module (gid,system,hidden,mobile,name,id,tblnum,d_regis) VALUES (3,'1','0','1','마켓','market','0',getdate());",
+        "INSERT INTO rx_s_module (gid,system,hidden,mobile,name,id,tblnum,d_regis) VALUES (4,'1','0','1','시스템','admin','0',getdate());",
+        "INSERT INTO rx_s_module (gid,system,hidden,mobile,name,id,tblnum,d_regis) VALUES (5,'1','0','1','회원관리','member','0',getdate());",
+        "INSERT INTO rx_s_module (gid,system,hidden,mobile,name,id,tblnum,d_regis) VALUES (6,'1','0','1','게시판','bbs','0',getdate());",
+        "INSERT INTO rx_s_module (gid,system,hidden,mobile,name,id,tblnum,d_regis) VALUES (7,'1','0','1','댓글','comment','0',getdate());",
+        "INSERT INTO rx_s_module (gid,system,hidden,mobile,name,id,tblnum,d_regis) VALUES (8,'1','0','1','첨부파일','upload','0',getdate());",
+        "INSERT INTO rx_s_module (gid,system,hidden,mobile,name,id,tblnum,d_regis) VALUES (9,'1','0','1','팝업','popup','0',getdate());",
+        "INSERT INTO rx_s_module (gid,system,hidden,mobile,name,id,tblnum,d_regis) VALUES (10,'1','0','1','파일메니져','filemanager','0',getdate());",
+        "INSERT INTO rx_s_module (gid,system,hidden,mobile,name,id,tblnum,d_regis) VALUES (11,'1','1','1','DB메니져','dbmanager','0',getdate());",
+        "INSERT INTO rx_s_module (gid,system,hidden,mobile,name,id,tblnum,d_regis) VALUES (12,'1','0','1','모바일','mobile','0',getdate());",
+        "INSERT INTO rx_s_module (gid,system,hidden,mobile,name,id,tblnum,d_regis) VALUES (13,'1','0','1','도메인','domain','0',getdate());",
+        "INSERT INTO rx_s_module (gid,system,hidden,mobile,name,id,tblnum,d_regis) VALUES (14,'0','0','1','접속통계','counter','0',getdate());",
+        "INSERT INTO rx_s_module (gid,system,hidden,mobile,name,id,tblnum,d_regis) VALUES (15,'1','0','1','통합검색','search','0',getdate());",
+        "INSERT INTO rx_s_module (gid,system,hidden,mobile,name,id,tblnum,d_regis) VALUES (16,'0','0','1','위젯','widget','0',getdate());",
+        "INSERT INTO rx_s_module (gid,system,hidden,mobile,name,id,tblnum,d_regis) VALUES (17,'0','0','1','태그','tag','0',getdate());",
+        "INSERT INTO rx_s_module (gid,system,hidden,mobile,name,id,tblnum,d_regis) VALUES (18,'1','0','1','트랙백','trackback','0',getdate());",
+        "INSERT INTO rx_s_module (gid,system,hidden,mobile,name,id,tblnum,d_regis) VALUES (19,'1','0','1','편집기','editor','0',getdate());",
+        "INSERT INTO rx_s_module (gid,system,hidden,mobile,name,id,tblnum,d_regis) VALUES (20,'0','1','1','URLrewrite','rewrite','0',getdate());",
+        "INSERT INTO rx_s_module (gid,system,hidden,mobile,name,id,tblnum,d_regis) VALUES (21,'1','1','1','우편번호검색','zipsearch','0',getdate());"
+    };    
     
-    foreach (var line in File.ReadAllLines(fileName))
+    foreach (var line in InsertModuleSqls)
     {
         @_DB.Execute(line)
     }
 }
 
 @helper insertCodeLang()
-    {   
-        // insert data in rx_code_g_lang
-        string cpath = Request.PhysicalApplicationPath + "\\_var\\language\\";
+{   
+    // insert data in rx_code_g_lang
+    string cpath = Request.PhysicalApplicationPath + "\\_var\\language\\";
 
-        foreach (string dirs in Directory.GetDirectories(cpath))
+    foreach (string dirs in Directory.GetDirectories(cpath))
+    {
+        string dirs_name = dirs.Substring(cpath.Length, dirs.Length - cpath.Length);
+        foreach (string files in Directory.GetFiles(dirs))
         {
-            string dirs_name = dirs.Substring(cpath.Length, dirs.Length - cpath.Length);
-            foreach (string files in Directory.GetFiles(dirs))
-            {
-                string file_name = files.Substring(dirs.Length + 1, files.Length - dirs.Length - 1);
+            string file_name = files.Substring(dirs.Length + 1, files.Length - dirs.Length - 1);
 
-                if (file_name == "name.txt")
+            if (file_name == "name.txt")
+            {
+                continue;
+            }
+
+            Array dataRows = File.ReadAllLines(files);
+
+            foreach (string data in dataRows)
+            {
+                if (data.Trim() == "")
                 {
                     continue;
                 }
 
-                Array dataRows = File.ReadAllLines(files);
+                string[] item = _System.getArrayString(data);
 
-                foreach (string data in dataRows)
-                {
-                    if (data.Trim() == "")
-                    {
-                        continue;
-                    }
-
-                    string[] item = _System.getArrayString(data);
-
-                    string INSERT_CODE_SQL = "INSERT INTO " + AppState["table_code_g_lang"] + " (nation,id,id_value,type) VALUES ('" + dirs_name + "','" + item[1] + "','" + item[2] + "','" + item[0] + "');";                
-                @_DB.Execute(INSERT_CODE_SQL)
-                }
+                string INSERT_CODE_SQL = "INSERT INTO " + AppState["table_code_g_lang"] + " (nation,id,id_value,type) VALUES ('" + dirs_name + "','" + item[1] + "','" + item[2] + "','" + item[0] + "');";                
+            @_DB.Execute(INSERT_CODE_SQL)
             }
         }
+    }
 }
 
 @helper moduleSet()

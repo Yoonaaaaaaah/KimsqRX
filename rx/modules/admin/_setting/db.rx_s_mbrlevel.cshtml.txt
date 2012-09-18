@@ -1,1 +1,1 @@
-﻿CREATE TABLE rx_s_mbrlevel ( uid  int   NOT NULL , gid  int   NOT NULL , name  nvarchar(30)   NOT NULL , num  int   NOT NULL , login  int   NOT NULL , post  int   NOT NULL , comment  int   NOT NULL ,PRIMARY KEY (uid));
+﻿CREATE TABLE rx_s_mbrlevel ( uid  int  identity(1,1)  NOT NULL , gid  int   NOT NULL , name  nvarchar(30)   NOT NULL , num  int   NOT NULL , login  int   NOT NULL , post  int   NOT NULL , comment  int   NOT NULL ,PRIMARY KEY (uid));
